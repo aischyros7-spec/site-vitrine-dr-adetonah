@@ -1,0 +1,28 @@
+<!-- PLACEHOLDER — remplacer ce fichier par une photo JPG/WebP (ratio 4:5, ~800x1000px)
+     puis mettre à jour le src dans index.html (section Hero). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 600" role="img" aria-label="Emplacement du portrait">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E8EFEC"/>
+      <stop offset="100%" stop-color="#F4EFE8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="480" height="600" fill="url(#bg)"/>
+
+  <!-- Silhouette stylisée -->
+  <g fill="#0F4C43" opacity=".16">
+    <circle cx="240" cy="228" r="86"/>
+    <path d="M84 600c0-88 70-158 156-158s156 70 156 158H84Z"/>
+  </g>
+
+  <!-- Croix de pharmacie discrète -->
+  <g fill="#C89B5A" opacity=".8">
+    <path d="M368 72h26v26h26v26h-26v26h-26v-26h-26V98h26V72Z"/>
+  </g>
+
+  <text x="240" y="540" text-anchor="middle"
+        font-family="Georgia, serif" font-size="21" fill="#5F6B66" letter-spacing="2">
+    PORTRAIT À REMPLACER
+  </text>
+</svg>
