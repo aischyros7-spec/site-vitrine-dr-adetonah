@@ -1,28 +1,33 @@
-<!-- PLACEHOLDER — remplacer ce fichier par une photo JPG/WebP (ratio 4:5, ~800x1000px)
-     puis mettre à jour le src dans index.html (section Hero). -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 600" role="img" aria-label="Emplacement du portrait">
+<!-- PLACEHOLDER — remplacer par une photo (ratio 4:5, ~900x1125 px, JPG ou WebP).
+     Le traitement duotone vert est appliqué en CSS : une photo couleur ordinaire
+     s'intègre directement, et retrouve ses couleurs au survol. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 675" role="img" aria-label="Emplacement du portrait">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#E8EFEC"/>
-      <stop offset="100%" stop-color="#F4EFE8"/>
+    <linearGradient id="nuit" x1="0" y1="0" x2=".4" y2="1">
+      <stop offset="0%" stop-color="#0B2A23"/>
+      <stop offset="100%" stop-color="#041512"/>
     </linearGradient>
+    <radialGradient id="halo" cx=".5" cy=".28" r=".55">
+      <stop offset="0%" stop-color="#3BE07D" stop-opacity=".22"/>
+      <stop offset="100%" stop-color="#3BE07D" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
-  <rect width="480" height="600" fill="url(#bg)"/>
+  <rect width="540" height="675" fill="url(#nuit)"/>
+  <rect width="540" height="675" fill="url(#halo)"/>
 
-  <!-- Silhouette stylisée -->
-  <g fill="#0F4C43" opacity=".16">
-    <circle cx="240" cy="228" r="86"/>
-    <path d="M84 600c0-88 70-158 156-158s156 70 156 158H84Z"/>
+  <!-- Silhouette adossée au comptoir -->
+  <g fill="#3BE07D" opacity=".13">
+    <circle cx="270" cy="252" r="92"/>
+    <path d="M104 675c0-94 74-170 166-170s166 76 166 170H104Z"/>
   </g>
 
-  <!-- Croix de pharmacie discrète -->
-  <g fill="#C89B5A" opacity=".8">
-    <path d="M368 72h26v26h26v26h-26v26h-26v-26h-26V98h26V72Z"/>
+  <!-- Trame de diodes, écho à l'enseigne -->
+  <g fill="#3BE07D" opacity=".16">
+    <circle cx="452" cy="86" r="4"/><circle cx="470" cy="86" r="4"/><circle cx="488" cy="86" r="4"/>
+    <circle cx="470" cy="68" r="4"/><circle cx="470" cy="104" r="4"/>
   </g>
 
-  <text x="240" y="540" text-anchor="middle"
-        font-family="Georgia, serif" font-size="21" fill="#5F6B66" letter-spacing="2">
-    PORTRAIT À REMPLACER
-  </text>
+  <text x="270" y="620" text-anchor="middle" font-family="ui-monospace, monospace"
+        font-size="15" letter-spacing="3" fill="#6F8880">PORTRAIT À REMPLACER</text>
 </svg>

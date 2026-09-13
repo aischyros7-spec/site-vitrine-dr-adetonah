@@ -3,39 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0F4C43">
+  <meta name="theme-color" content="#03120F">
+  <meta name="color-scheme" content="dark">
 
   <!-- ============================================================
        SEO — TODO : ajuster l'URL canonique et l'image OG après mise en ligne
        ============================================================ -->
-  <title>Dr Fahrid Honorat ADETONAH — Pharmacien | La santé expliquée simplement</title>
-  <meta name="description" content="Dr Fahrid Honorat ADETONAH, Docteur en Pharmacie à Cotonou (Bénin). Pharmacien titulaire de la Nouvelle Pharmacie Sainte Victoire (24h/24), fondateur de StockAid Pro et créateur de contenu santé suivi par plus de 100 000 personnes.">
+  <title>Dr Fahrid Honorat ADETONAH — Pharmacien à Cotonou</title>
+  <meta name="description" content="Dr Fahrid Honorat ADETONAH, Docteur en Pharmacie à Cotonou. Titulaire de la Nouvelle Pharmacie Sainte Victoire, ouverte 24h/24. Fondateur de StockAid Pro, créateur de contenu santé suivi par plus de 100 000 personnes.">
   <meta name="author" content="Dr Fahrid Honorat ADETONAH">
   <link rel="canonical" href="https://www.exemple.com/"><!-- TODO : URL finale -->
 
-  <!-- Partage sur les réseaux sociaux (Open Graph + Twitter Card) -->
   <meta property="og:type" content="website">
   <meta property="og:locale" content="fr_FR">
   <meta property="og:title" content="Dr Fahrid Honorat ADETONAH — Pharmacien">
-  <meta property="og:description" content="La santé expliquée par un pharmacien africain. Conférences, formations, StockAid Pro et partenariats.">
+  <meta property="og:description" content="L'officine qui ne ferme jamais. La santé expliquée par un pharmacien africain.">
   <meta property="og:url" content="https://www.exemple.com/"><!-- TODO : URL finale -->
-  <meta property="og:image" content="assets/img/og-image.svg"><!-- TODO : remplacer par un JPG 1200x630 -->
+  <meta property="og:image" content="assets/img/og-image.svg"><!-- TODO : exporter en JPG 1200x630 -->
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Favicon (SVG léger, pas de requête bloquante) -->
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 
   <!-- ============================================================
-       POLICES — Fraunces (titres) + Inter (texte)
-       preconnect = handshake anticipé ; display=swap = pas de texte invisible
+       POLICES
+       Bodoni Moda — le Didone des étiquettes d'apothicaire (titres)
+       Archivo     — grotesque de signalétique (texte courant)
+       La voix « données » utilise la mono du système : aucune requête.
        ============================================================ -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;1,6..96,500&display=swap">
 
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Données structurées : aide Google à afficher une fiche enrichie -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -53,55 +53,55 @@
         "addressLocality": "Cotonou",
         "addressCountry": "BJ"
       },
-      "openingHours": "Mo-Su 00:00-23:59"
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "00:00",
+        "closes": "23:59"
+      }
     },
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Cotonou",
-      "addressCountry": "BJ"
-    }
+    "address": { "@type": "PostalAddress", "addressLocality": "Cotonou", "addressCountry": "BJ" }
   }
   </script>
 </head>
 
 <body>
 
-<!-- Lien d'évitement : accessibilité clavier / lecteurs d'écran -->
 <a class="skip-link" href="#main">Aller au contenu principal</a>
 
 <!-- ================================================================
-     HEADER — sticky, devient opaque au scroll (classe .is-scrolled en JS)
+     BARRE DE NAVIGATION
+     Fine, sur fond de nuit. Porte une pastille d'état « ouverte »
+     qui n'est pas décorative : elle affiche l'heure réelle à Cotonou.
      ================================================================ -->
-<header class="header" id="header">
-  <div class="container header__inner">
+<header class="topbar" id="topbar">
+  <div class="shell topbar__inner">
 
-    <a class="brand" href="#accueil" aria-label="Retour en haut de page">
-      <span class="brand__mark" aria-hidden="true">
-        <!-- Monogramme : croix de pharmacie stylisée -->
-        <svg viewBox="0 0 32 32" width="32" height="32" fill="none">
-          <rect width="32" height="32" rx="9" fill="currentColor"/>
-          <path d="M13.4 8h5.2v5.4H24v5.2h-5.4V24h-5.2v-5.4H8v-5.2h5.4V8Z" fill="#FDFCFA"/>
-        </svg>
-      </span>
-      <span class="brand__text">
-        <strong>Dr F. H. ADETONAH</strong>
-        <small>Docteur en Pharmacie</small>
+    <a class="plaque" href="#accueil" aria-label="Retour en haut de page">
+      <span class="plaque__cross" aria-hidden="true"></span>
+      <span class="plaque__text">
+        <span class="plaque__name">ADETONAH</span>
+        <span class="plaque__role">Docteur en pharmacie</span>
       </span>
     </a>
 
-    <!-- Bouton burger : visible sous 900px, piloté par main.js -->
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu" aria-label="Ouvrir le menu">
-      <span class="nav-toggle__bars" aria-hidden="true"></span>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">
+      <span class="menu-btn__lines" aria-hidden="true"></span>
+      <span class="menu-btn__label">Menu</span>
     </button>
 
-    <nav class="nav" id="navMenu" aria-label="Navigation principale">
-      <ul class="nav__list">
-        <li><a class="nav__link" href="#accueil">Accueil</a></li>
-        <li><a class="nav__link" href="#services">Services</a></li>
-        <li><a class="nav__link" href="#apropos">À propos</a></li>
-        <li><a class="nav__link" href="#contact">Contact</a></li>
-        <li><a class="btn btn--accent btn--sm nav__cta" href="#contact">Me contacter</a></li>
+    <nav class="menu" id="menu" aria-label="Navigation principale">
+      <ul class="menu__list">
+        <li><a class="menu__link" href="#accueil">Accueil</a></li>
+        <li><a class="menu__link" href="#services">Services</a></li>
+        <li><a class="menu__link" href="#apropos">À propos</a></li>
+        <li><a class="menu__link" href="#contact">Contact</a></li>
       </ul>
+      <!-- Horloge Cotonou : mise à jour en direct par main.js -->
+      <p class="openstate" id="openstateNav">
+        <span class="openstate__dot" aria-hidden="true"></span>
+        <span class="openstate__text">Ouverte&nbsp;· <time id="clockNav">—:—</time> à Cotonou</span>
+      </p>
     </nav>
 
   </div>
@@ -110,196 +110,278 @@
 <main id="main">
 
   <!-- ================================================================
-       1. HERO
+       HERO — la thèse de la page : l'officine qui ne ferme jamais
        ================================================================ -->
   <section class="hero" id="accueil">
-    <div class="container hero__inner">
+    <div class="shell hero__grid">
 
-      <div class="hero__content">
-        <p class="eyebrow reveal">Cotonou &middot; Bénin</p>
+      <div class="hero__text">
+        <p class="kicker">Cotonou, Bénin &mdash; 6°21′N 2°23′E</p>
 
-        <h1 class="hero__title reveal" data-reveal-delay="1">
-          La santé expliquée par un <em>pharmacien africain</em>
+        <h1 class="hero__title">
+          La santé expliquée par un <em>pharmacien africain.</em>
         </h1>
 
-        <p class="hero__lead reveal" data-reveal-delay="2">
-          Docteur en Pharmacie, pharmacien titulaire de la Nouvelle Pharmacie Sainte Victoire,
-          ouverte 24h/24. J'informe, je forme et j'accompagne les officines et le grand public
-          vers une santé mieux comprise.
+        <p class="hero__lead">
+          Je suis <strong>Fahrid Honorat ADETONAH</strong>, docteur en pharmacie et titulaire de
+          la Nouvelle Pharmacie Sainte Victoire, à Fidjrossè Carrefour Adjaha. Nous n'avons
+          jamais fermé. Ni la nuit, ni les dimanches, ni les jours fériés.
         </p>
 
-        <div class="hero__actions reveal" data-reveal-delay="3">
-          <a class="btn btn--accent" href="#contact">Me contacter</a>
-          <a class="btn btn--ghost" href="#services">Voir mes services</a>
+        <div class="hero__cta">
+          <a class="btn btn--led" href="#contact">Me contacter</a>
+          <a class="btn btn--bare" href="#services">Ce que je propose</a>
         </div>
 
-        <!-- Preuve sociale : chiffres clés -->
-        <ul class="stats reveal" data-reveal-delay="4">
-          <li class="stats__item">
-            <strong class="stats__value">100k+</strong>
-            <span class="stats__label">abonnés sur TikTok</span>
-          </li>
-          <li class="stats__item">
-            <strong class="stats__value">24h/24</strong>
-            <span class="stats__label">officine ouverte</span>
-          </li>
-          <li class="stats__item">
-            <strong class="stats__value">StockAid</strong>
-            <span class="stats__label">fondateur &amp; concepteur</span>
-          </li>
-        </ul>
+        <!-- État réel de l'officine, horloge locale à l'appui -->
+        <p class="openstate openstate--lg" id="openstateHero">
+          <span class="openstate__dot" aria-hidden="true"></span>
+          <span class="openstate__text">
+            Il est <time id="clockHero">—:—</time> à Cotonou. <strong>L'officine est ouverte.</strong>
+          </span>
+        </p>
       </div>
 
-      <!-- Portrait. TODO : remplacer portrait.svg par une photo JPG/WebP 800x1000 -->
-      <div class="hero__media reveal" data-reveal-delay="2">
-        <figure class="portrait">
-          <img src="assets/img/portrait.svg"
-               alt="Portrait du Dr Fahrid Honorat ADETONAH, pharmacien"
-               width="480" height="600" fetchpriority="high" decoding="async">
-          <figcaption class="portrait__badge">
-            <span aria-hidden="true">✚</span> Pharmacien titulaire &middot; NPSV
-          </figcaption>
-        </figure>
+      <!-- L'enseigne : croix à matrice de LED, dessinée en canvas.
+           Le texte défilant est repris dans .sign__sr pour les lecteurs d'écran. -->
+      <div class="hero__sign">
+        <div class="sign">
+          <canvas class="sign__canvas" id="signCanvas" role="img"
+                  aria-label="Enseigne lumineuse de pharmacie affichant : ouvert 24h sur 24"></canvas>
+          <div class="sign__frame" aria-hidden="true"></div>
+        </div>
+        <p class="sign__caption">
+          Enseigne NPSV &mdash; Fidjrossè Carrefour Adjaha<span class="sign__sep" aria-hidden="true">/</span>allumée en permanence depuis l'ouverture
+        </p>
       </div>
 
     </div>
   </section>
 
   <!-- ================================================================
-       2. À PROPOS
+       BANDEAU DÉFILANT — signalétique, pas décoration :
+       chaque mention est une information vérifiable du parcours
        ================================================================ -->
-  <section class="section section--alt" id="apropos">
-    <div class="container">
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker__track" id="tickerTrack">
+      <span class="ticker__row">
+        <b>Doctorat en pharmacie</b><i>✚</i>
+        <b>Master transport &amp; logistique</b><i>✚</i>
+        <b>Titulaire NPSV &mdash; 24h/24</b><i>✚</i>
+        <b>Fondateur de StockAid Pro</b><i>✚</i>
+        <b>100 000+ abonnés</b><i>✚</i>
+        <b>Chargé de communication APhaSPB</b><i>✚</i>
+      </span>
+    </div>
+  </div>
+  <!-- Équivalent accessible du bandeau, hors flux visuel -->
+  <p class="sr-only">
+    Doctorat en pharmacie. Master en transport et logistique. Titulaire de la NPSV, ouverte
+    24h/24. Fondateur de StockAid Pro. Plus de 100 000 abonnés. Chargé de communication
+    de l'APhaSPB.
+  </p>
 
-      <header class="section__head reveal">
-        <p class="eyebrow">À propos</p>
-        <h2 class="section__title">Un pharmacien entre comptoir, logistique et pédagogie</h2>
-      </header>
+  <!-- ================================================================
+       À PROPOS
+       ================================================================ -->
+  <section class="band" id="apropos">
+    <div class="shell">
 
       <div class="about">
 
-        <div class="about__text reveal">
+        <figure class="figure">
+          <!-- TODO : remplacer portrait.svg par une photo (ratio 4:5, ~900x1125 px).
+               Le traitement duotone vert est appliqué en CSS et se lève au survol. -->
+          <img class="figure__img" src="assets/img/portrait.svg"
+               alt="Portrait du Dr Fahrid Honorat ADETONAH" width="540" height="675"
+               loading="lazy" decoding="async">
+          <figcaption class="figure__cap">
+            <span class="figure__idx">01</span>
+            Comptoir de la NPSV, garde de nuit
+          </figcaption>
+        </figure>
+
+        <div class="about__body">
+          <p class="kicker">À propos</p>
+
+          <h2 class="h2">
+            Un pharmacien qui compte les boîtes <em>autant qu'il explique les notices.</em>
+          </h2>
+
           <p>
-            Je suis <strong>Fahrid Honorat ADETONAH</strong>, Docteur en Pharmacie et pharmacien
-            titulaire de la <strong>Nouvelle Pharmacie Sainte Victoire (NPSV)</strong>, à Fidjrossè
-            Carrefour Adjaha, Cotonou. Notre officine est ouverte <strong>24 heures sur 24</strong> :
-            une exigence de disponibilité qui façonne ma façon d'exercer le métier.
+            Une officine ouverte en continu ne pardonne rien. Une rupture de stock à 2h du matin
+            n'est pas une ligne dans un tableau : c'est un patient devant le comptoir, sans solution.
+            C'est ce constat, répété nuit après nuit, qui m'a conduit à reprendre des études de
+            <strong>transport et logistique</strong> après mon doctorat.
           </p>
+
           <p>
-            Un <strong>Master en Transport et Logistique</strong> est venu compléter ma formation
-            pharmaceutique. De cette double compétence est né <strong>StockAid Pro</strong>, un outil
-            de gestion intelligente des stocks pensé pour les réalités des officines africaines :
-            ruptures, péremptions, trésorerie immobilisée.
+            De cette double formation est né <strong>StockAid&nbsp;Pro</strong>, un outil de gestion
+            des stocks calibré pour les réalités des officines africaines&nbsp;: péremptions qui
+            échappent, trésorerie immobilisée dans les rayons, commandes passées à l'intuition.
           </p>
+
           <p>
-            En parallèle, je vulgarise la santé auprès de plus de <strong>100 000 abonnés</strong>
-            sur les réseaux sociaux, et j'assure la fonction de <strong>Chargé de Communication
-            de l'APhaSPB</strong>, l'Association des Pharmaciens du Secteur Privé du Bénin.
+            Le reste de mon temps, je le passe à traduire. Traduire une ordonnance en langage clair
+            pour <strong>plus de 100 000 personnes</strong> qui me suivent, et porter la voix de mes
+            confrères comme <strong>chargé de communication de l'APhaSPB</strong>.
           </p>
+
+          <blockquote class="quote">
+            Un médicament mal compris est un médicament mal pris.
+          </blockquote>
         </div>
 
-        <!-- Parcours en timeline verticale -->
-        <ol class="timeline reveal" data-reveal-delay="1">
-          <li class="timeline__item">
-            <h3 class="timeline__title">Doctorat en Pharmacie</h3>
-            <p class="timeline__desc">Formation scientifique et clinique, socle de l'exercice officinal.</p>
-          </li>
-          <li class="timeline__item">
-            <h3 class="timeline__title">Master en Transport &amp; Logistique</h3>
-            <p class="timeline__desc">Spécialisation en chaîne d'approvisionnement et gestion des flux.</p>
-          </li>
-          <li class="timeline__item">
-            <h3 class="timeline__title">Pharmacien titulaire — NPSV</h3>
-            <p class="timeline__desc">Direction d'une officine ouverte 24h/24 à Fidjrossè, Cotonou.</p>
-          </li>
-          <li class="timeline__item">
-            <h3 class="timeline__title">Fondateur de StockAid Pro</h3>
-            <p class="timeline__desc">Solution de gestion de stock dédiée aux officines africaines.</p>
-          </li>
-          <li class="timeline__item">
-            <h3 class="timeline__title">Chargé de Communication — APhaSPB</h3>
-            <p class="timeline__desc">Porte-voix des pharmaciens du secteur privé béninois.</p>
-          </li>
-        </ol>
-
       </div>
+
+      <!-- Parcours : relevé factuel, mis en page comme un registre -->
+      <div class="ledger">
+        <h3 class="ledger__title">Parcours</h3>
+        <dl class="ledger__list">
+          <div class="ledger__row">
+            <dt>Doctorat en pharmacie</dt>
+            <dd>Formation scientifique et clinique. Le socle de l'exercice officinal.</dd>
+          </div>
+          <div class="ledger__row">
+            <dt>Master transport &amp; logistique</dt>
+            <dd>Chaîne d'approvisionnement, gestion des flux, pilotage des stocks.</dd>
+          </div>
+          <div class="ledger__row">
+            <dt>Titulaire &mdash; Nouvelle Pharmacie Sainte Victoire</dt>
+            <dd>Direction d'une officine ouverte 24h/24 à Fidjrossè Carrefour Adjaha, Cotonou.</dd>
+          </div>
+          <div class="ledger__row">
+            <dt>Fondateur &mdash; StockAid Pro</dt>
+            <dd>Gestion intelligente des stocks pharmaceutiques pour les officines africaines.</dd>
+          </div>
+          <div class="ledger__row">
+            <dt>Chargé de communication &mdash; APhaSPB</dt>
+            <dd>Association des Pharmaciens du Secteur Privé du Bénin.</dd>
+          </div>
+        </dl>
+      </div>
+
     </div>
   </section>
 
   <!-- ================================================================
-       3. SERVICES — 4 cartes
+       SERVICES — « le meuble d'officine »
+       Quatre tiroirs. On en ouvre un, il révèle son contenu.
        ================================================================ -->
-  <section class="section" id="services">
-    <div class="container">
+  <section class="band band--cabinet" id="services">
+    <div class="shell">
 
-      <header class="section__head reveal">
-        <p class="eyebrow">Services</p>
-        <h2 class="section__title">Comment nous pouvons travailler ensemble</h2>
-        <p class="section__lead">
-          Quatre façons de collaborer, que vous soyez une organisation, une officine,
-          un confrère ou une marque.
-        </p>
+      <header class="band__head">
+        <p class="kicker">Services</p>
+        <h2 class="h2">Quatre tiroirs. <em>Ouvrez celui qui vous concerne.</em></h2>
       </header>
 
-      <div class="cards">
+      <div class="cabinet" id="cabinet">
 
-        <article class="card reveal">
-          <span class="card__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 11a9 9 0 0 1 18 0"/><path d="M3 11v4a2 2 0 0 0 2 2h1v-6H5a2 2 0 0 0-2 2Z"/>
-              <path d="M21 11v4a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2Z"/><path d="M18 17v1a3 3 0 0 1-3 3h-2"/>
-            </svg>
-          </span>
-          <h3 class="card__title">Conférences &amp; interventions</h3>
-          <p class="card__desc">
-            Prise de parole sur la santé publique, le bon usage du médicament et la
-            digitalisation de la pharmacie. Congrès, universités, entreprises et médias.
-          </p>
-          <a class="card__link" href="#contact">Demander une intervention <span aria-hidden="true">→</span></a>
+        <article class="drawer">
+          <h3 class="drawer__h">
+            <button class="drawer__btn" type="button" aria-expanded="false" aria-controls="d1">
+              <span class="drawer__tag">Intervention</span>
+              <span class="drawer__name">Conférences &amp; prises de parole</span>
+              <span class="drawer__hint">Congrès, universités, entreprises, médias</span>
+              <span class="drawer__pull" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="drawer__panel" id="d1" role="region">
+            <div class="drawer__inner">
+              <p>
+                Santé publique, bon usage du médicament, digitalisation de l'officine&nbsp;:
+                j'interviens devant des publics professionnels comme devant le grand public,
+                en français et en fon. Format court pour un plateau télé, keynote pour un congrès,
+                atelier d'une demi-journée pour une équipe.
+              </p>
+              <ul class="drawer__facts">
+                <li><span>Formats</span> Keynote, table ronde, atelier, plateau</li>
+                <li><span>Zone</span> Bénin et Afrique de l'Ouest, distanciel partout</li>
+                <li><span>Délai</span> Quatre semaines de préavis recommandées</li>
+              </ul>
+              <a class="btn btn--led btn--sm" href="#contact">Demander une intervention</a>
+            </div>
+          </div>
         </article>
 
-        <article class="card card--featured reveal" data-reveal-delay="1">
-          <span class="card__flag">Produit phare</span>
-          <span class="card__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5v-9Z"/><path d="m3 7.5 9 4.5 9-4.5"/><path d="M12 12v9"/>
-            </svg>
-          </span>
-          <h3 class="card__title">StockAid Pro</h3>
-          <p class="card__desc">
-            L'outil de gestion intelligente des stocks pharmaceutiques conçu pour les officines
-            africaines : suivi des péremptions, alertes de rupture et pilotage de la trésorerie.
-          </p>
-          <a class="card__link" href="#contact">Demander une démonstration <span aria-hidden="true">→</span></a>
+        <article class="drawer drawer--flag">
+          <h3 class="drawer__h">
+            <button class="drawer__btn" type="button" aria-expanded="false" aria-controls="d2">
+              <span class="drawer__tag">Logiciel</span>
+              <span class="drawer__name">StockAid Pro</span>
+              <span class="drawer__hint">Gestion de stock pour officines africaines</span>
+              <span class="drawer__pull" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="drawer__panel" id="d2" role="region">
+            <div class="drawer__inner">
+              <p>
+                L'outil que j'ai conçu pour ma propre officine avant de l'ouvrir aux confrères.
+                Il surveille les dates courtes, signale les ruptures avant qu'elles arrivent et
+                montre, en francs CFA, ce que le stock immobilise réellement.
+              </p>
+              <ul class="drawer__facts">
+                <li><span>Alertes</span> Péremptions et seuils de réapprovisionnement</li>
+                <li><span>Pilotage</span> Rotation des références, trésorerie immobilisée</li>
+                <li><span>Terrain</span> Pensé pour une connexion intermittente</li>
+              </ul>
+              <a class="btn btn--led btn--sm" href="#contact">Demander une démonstration</a>
+            </div>
+          </div>
         </article>
 
-        <article class="card reveal" data-reveal-delay="2">
-          <span class="card__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 4 2 8l10 4 10-4-10-4Z"/><path d="M6 10v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/><path d="M22 8v6"/>
-            </svg>
-          </span>
-          <h3 class="card__title">Formations en ligne</h3>
-          <p class="card__desc">
-            Modules à distance pour pharmaciens et équipes officinales : gestion des stocks,
-            conseil au comptoir, communication patient et organisation de l'officine.
-          </p>
-          <a class="card__link" href="#contact">Voir les formations <span aria-hidden="true">→</span></a>
+        <article class="drawer">
+          <h3 class="drawer__h">
+            <button class="drawer__btn" type="button" aria-expanded="false" aria-controls="d3">
+              <span class="drawer__tag">Formation</span>
+              <span class="drawer__name">Formations en ligne</span>
+              <span class="drawer__hint">Pour pharmaciens et équipes officinales</span>
+              <span class="drawer__pull" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="drawer__panel" id="d3" role="region">
+            <div class="drawer__inner">
+              <p>
+                Des modules à distance conçus depuis le comptoir, pas depuis un amphithéâtre.
+                Chaque séance part d'une situation réelle d'officine et se termine par une
+                procédure applicable dès le lendemain matin.
+              </p>
+              <ul class="drawer__facts">
+                <li><span>Gestion</span> Stocks, commandes, inventaire, marge</li>
+                <li><span>Comptoir</span> Conseil, dispensation, communication patient</li>
+                <li><span>Équipe</span> Organisation du travail et gardes de nuit</li>
+              </ul>
+              <a class="btn btn--led btn--sm" href="#contact">Voir les formations</a>
+            </div>
+          </div>
         </article>
 
-        <article class="card reveal" data-reveal-delay="3">
-          <span class="card__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 11a4 4 0 1 0-4-4"/><path d="M8.5 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
-              <path d="M2 21v-1a5 5 0 0 1 5-5h3a5 5 0 0 1 5 5v1"/><path d="M17 15h5"/><path d="M19.5 12.5v5"/>
-            </svg>
-          </span>
-          <h3 class="card__title">Partenariats &amp; sponsorings</h3>
-          <p class="card__desc">
-            Collaborations avec des marques santé, laboratoires et institutions, auprès d'une
-            communauté engagée de plus de 100 000 personnes en Afrique francophone.
-          </p>
-          <a class="card__link" href="#contact">Discuter d'un partenariat <span aria-hidden="true">→</span></a>
+        <article class="drawer">
+          <h3 class="drawer__h">
+            <button class="drawer__btn" type="button" aria-expanded="false" aria-controls="d4">
+              <span class="drawer__tag">Partenariat</span>
+              <span class="drawer__name">Partenariats &amp; sponsorings</span>
+              <span class="drawer__hint">Marques santé, laboratoires, institutions</span>
+              <span class="drawer__pull" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="drawer__panel" id="d4" role="region">
+            <div class="drawer__inner">
+              <p>
+                Une communauté de plus de 100 000 personnes en Afrique francophone, qui vient
+                chercher de l'information de santé fiable. Je ne relaie que ce que je
+                dispenserais moi-même au comptoir&nbsp;: la confiance de cette audience n'est
+                pas un inventaire à écouler.
+              </p>
+              <ul class="drawer__facts">
+                <li><span>Audience</span> Afrique francophone, majoritairement mobile</li>
+                <li><span>Formats</span> Contenu vidéo, campagne de sensibilisation, ambassade</li>
+                <li><span>Cadre</span> Validation pharmaceutique préalable, systématique</li>
+              </ul>
+              <a class="btn btn--led btn--sm" href="#contact">Discuter d'un partenariat</a>
+            </div>
+          </div>
         </article>
 
       </div>
@@ -307,194 +389,157 @@
   </section>
 
   <!-- ================================================================
-       4. RÉSEAUX SOCIAUX
+       RÉSEAUX — TikTok domine, la hiérarchie le dit
        TODO : remplacer les URL Instagram et LinkedIn par les vraies
        ================================================================ -->
-  <section class="social" id="reseaux">
-    <div class="container social__inner reveal">
+  <section class="band" id="reseaux">
+    <div class="shell">
 
-      <div class="social__text">
-        <p class="eyebrow eyebrow--light">Réseaux sociaux</p>
-        <h2 class="social__title">Suivez la santé au quotidien</h2>
-        <p class="social__lead">Conseils, décryptages et coulisses de l'officine, chaque semaine.</p>
-      </div>
+      <div class="reach">
 
-      <ul class="social__list">
-        <li>
-          <a class="social__link" href="https://www.tiktok.com/@dr_adetonah" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+        <a class="reach__main" href="https://www.tiktok.com/@dr_adetonah" target="_blank" rel="noopener noreferrer">
+          <span class="reach__label">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
               <path d="M16.5 3c.4 2.1 1.9 3.7 4 4v3a7.3 7.3 0 0 1-4-1.2v6.4a5.9 5.9 0 1 1-5.9-5.9c.3 0 .6 0 .9.1v3.1a2.9 2.9 0 1 0 2 2.7V3h3Z"/>
             </svg>
-            <span class="social__name">TikTok</span>
-            <span class="social__handle">@dr_adetonah</span>
-          </a>
-        </li>
-        <li>
-          <a class="social__link" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            TikTok &mdash; @dr_adetonah
+          </span>
+          <span class="reach__figure"><b>100</b>k<sup>+</sup></span>
+          <span class="reach__note">
+            Abonnés qui reçoivent une notice décryptée chaque semaine.
+            <span class="reach__go">Suivre<i aria-hidden="true">→</i></span>
+          </span>
+        </a>
+
+        <div class="reach__side">
+          <p class="kicker">Ailleurs</p>
+          <a class="reach__row" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
               <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/>
             </svg>
-            <span class="social__name">Instagram</span>
-            <span class="social__handle">Actualités &amp; conseils</span>
+            <span><b>Instagram</b>Coulisses de l'officine</span>
+            <i aria-hidden="true">→</i>
           </a>
-        </li>
-        <li>
-          <a class="social__link" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+          <a class="reach__row" href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
               <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05a4.2 4.2 0 0 1 3.75-2c4 0 4.4 2.5 4.4 5.8V21h-4v-5.6c0-1.35-.02-3.1-1.9-3.1-1.9 0-2.2 1.47-2.2 3v5.7h-4V9Z"/>
             </svg>
-            <span class="social__name">LinkedIn</span>
-            <span class="social__handle">Parcours professionnel</span>
+            <span><b>LinkedIn</b>Parcours &amp; StockAid Pro</span>
+            <i aria-hidden="true">→</i>
           </a>
-        </li>
-      </ul>
+        </div>
 
+      </div>
     </div>
   </section>
 
   <!-- ================================================================
-       5. CONTACT
+       CONTACT — mise en page d'ordonnance : réglures, pas de boîtes
        ================================================================ -->
-  <section class="section section--alt" id="contact">
-    <div class="container">
+  <section class="band band--contact" id="contact">
+    <div class="shell contact">
 
-      <header class="section__head reveal">
-        <p class="eyebrow">Contact</p>
-        <h2 class="section__title">Parlons de votre projet</h2>
-        <p class="section__lead">
-          Conférence, démonstration de StockAid Pro, formation ou partenariat :
-          décrivez votre besoin, je réponds sous 48 heures.
+      <div class="contact__head">
+        <p class="kicker">Contact</p>
+        <h2 class="h2">Dites-moi ce dont <em>vous avez besoin.</em></h2>
+        <p class="contact__lead">
+          Conférence, démonstration de StockAid&nbsp;Pro, formation ou partenariat.
+          Je lis tout moi-même et je réponds sous 48&nbsp;heures.
         </p>
-      </header>
-
-      <div class="contact">
-
-        <!-- FORMULAIRE
-             Configuration : renseignez data-endpoint avec votre URL Formspree
-             (ex. https://formspree.io/f/xxxxxxx). Tant que l'attribut est vide,
-             main.js bascule automatiquement sur un envoi par mailto:. -->
-        <form class="form reveal"
-              id="contactForm"
-              method="POST"
-              data-endpoint=""
-              data-mailto="contact@exemple.com"
-              novalidate>
-
-          <div class="form__row">
-            <div class="field">
-              <label class="field__label" for="name">Nom complet <span aria-hidden="true">*</span></label>
-              <input class="field__input" type="text" id="name" name="name"
-                     autocomplete="name" required placeholder="Votre nom">
-              <p class="field__error" data-error-for="name"></p>
-            </div>
-
-            <div class="field">
-              <label class="field__label" for="email">Email <span aria-hidden="true">*</span></label>
-              <input class="field__input" type="email" id="email" name="email"
-                     autocomplete="email" required placeholder="vous@exemple.com">
-              <p class="field__error" data-error-for="email"></p>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="field__label" for="phone">Téléphone <small>(facultatif)</small></label>
-            <input class="field__input" type="tel" id="phone" name="phone"
-                   autocomplete="tel" placeholder="+229 00 00 00 00">
-            <p class="field__error" data-error-for="phone"></p>
-          </div>
-
-          <div class="field">
-            <label class="field__label" for="message">Message <span aria-hidden="true">*</span></label>
-            <textarea class="field__input field__input--area" id="message" name="message"
-                      rows="5" required minlength="10"
-                      placeholder="Décrivez votre demande en quelques lignes..."></textarea>
-            <p class="field__error" data-error-for="message"></p>
-          </div>
-
-          <!-- Anti-spam : champ piège invisible pour les robots (honeypot) -->
-          <div class="form__honeypot" aria-hidden="true">
-            <label for="website">Ne pas remplir</label>
-            <input type="text" id="website" name="_gotcha" tabindex="-1" autocomplete="off">
-          </div>
-
-          <button class="btn btn--accent btn--block" type="submit" id="submitBtn">
-            Envoyer le message
-          </button>
-
-          <!-- Retour utilisateur (succès / erreur), annoncé aux lecteurs d'écran -->
-          <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
-        </form>
-
-        <!-- COORDONNÉES — TODO : remplacer les valeurs par les vraies -->
-        <aside class="contact__info reveal" data-reveal-delay="1">
-
-          <ul class="info-list">
-            <li class="info-list__item">
-              <span class="info-list__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 9 6 9-6"/>
-                </svg>
-              </span>
-              <div>
-                <h3 class="info-list__title">Email</h3>
-                <a href="mailto:contact@exemple.com">contact@exemple.com</a>
-              </div>
-            </li>
-
-            <li class="info-list__item">
-              <span class="info-list__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6.5 3h3l1.5 4-2 1.5a12 12 0 0 0 5.5 5.5L16 12l4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3.5 5.2 2 2 0 0 1 5.5 3h1Z"/>
-                </svg>
-              </span>
-              <div>
-                <h3 class="info-list__title">Téléphone / WhatsApp</h3>
-                <a href="tel:+22900000000">+229 00 00 00 00</a>
-              </div>
-            </li>
-
-            <li class="info-list__item">
-              <span class="info-list__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>
-                </svg>
-              </span>
-              <div>
-                <h3 class="info-list__title">Officine</h3>
-                <p>
-                  Nouvelle Pharmacie Sainte Victoire<br>
-                  Fidjrossè Carrefour Adjaha, Cotonou — Bénin
-                </p>
-              </div>
-            </li>
-          </ul>
-
-          <p class="badge-24">
-            <span class="badge-24__dot" aria-hidden="true"></span>
-            Officine ouverte 24h/24, 7j/7
-          </p>
-
-        </aside>
-
       </div>
+
+      <!-- FORMULAIRE
+           data-endpoint vide → le message part par le client mail du visiteur.
+           Renseignez une URL Formspree pour activer l'envoi direct. -->
+      <form class="rx" id="contactForm" method="POST"
+            data-endpoint="" data-mailto="contact@exemple.com" novalidate>
+
+        <div class="rx__pair">
+          <div class="rx__field">
+            <label for="name">Nom complet</label>
+            <input type="text" id="name" name="name" autocomplete="name" required placeholder="Votre nom">
+            <p class="rx__err" data-error-for="name"></p>
+          </div>
+          <div class="rx__field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required placeholder="vous@domaine.com">
+            <p class="rx__err" data-error-for="email"></p>
+          </div>
+        </div>
+
+        <div class="rx__field">
+          <label for="phone">Téléphone <span class="rx__opt">facultatif</span></label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="+229 00 00 00 00">
+          <p class="rx__err" data-error-for="phone"></p>
+        </div>
+
+        <div class="rx__field">
+          <label for="message">Votre demande</label>
+          <textarea id="message" name="message" rows="5" required minlength="10"
+                    placeholder="Le contexte, la date si vous en avez une, et ce que vous attendez de moi."></textarea>
+          <p class="rx__err" data-error-for="message"></p>
+        </div>
+
+        <!-- Piège à robots : invisible, jamais rempli par un humain -->
+        <div class="rx__trap" aria-hidden="true">
+          <label for="website">Ne pas remplir</label>
+          <input type="text" id="website" name="_gotcha" tabindex="-1" autocomplete="off">
+        </div>
+
+        <button class="btn btn--led btn--wide" type="submit" id="submitBtn">Envoyer</button>
+        <p class="rx__status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+
+      <!-- COORDONNÉES — TODO : remplacer par les vraies valeurs -->
+      <aside class="coords">
+        <dl>
+          <div class="coords__row">
+            <dt>Email</dt>
+            <dd><a href="mailto:contact@exemple.com">contact@exemple.com</a></dd>
+          </div>
+          <div class="coords__row">
+            <dt>Téléphone / WhatsApp</dt>
+            <dd><a href="tel:+22900000000">+229 00 00 00 00</a></dd>
+          </div>
+          <div class="coords__row">
+            <dt>Officine</dt>
+            <dd>
+              Nouvelle Pharmacie Sainte Victoire<br>
+              Fidjrossè Carrefour Adjaha<br>
+              Cotonou, Bénin
+            </dd>
+          </div>
+          <div class="coords__row">
+            <dt>Horaires</dt>
+            <dd>Sans interruption. <span class="coords__hi">Toutes les nuits comprises.</span></dd>
+          </div>
+        </dl>
+
+        <p class="openstate" id="openstateContact">
+          <span class="openstate__dot" aria-hidden="true"></span>
+          <span class="openstate__text">Il est <time id="clockContact">—:—</time> à Cotonou</span>
+        </p>
+      </aside>
+
     </div>
   </section>
 
 </main>
 
 <!-- ================================================================
-     6. FOOTER
+     PIED DE PAGE
      ================================================================ -->
-<footer class="footer">
-  <div class="container footer__inner">
+<footer class="foot">
+  <div class="shell foot__inner">
 
-    <div class="footer__brand">
-      <p class="footer__name">Dr Fahrid Honorat ADETONAH</p>
-      <p class="footer__role">Docteur en Pharmacie &middot; Cotonou, Bénin</p>
+    <div class="foot__sig">
+      <span class="plaque__cross plaque__cross--sm" aria-hidden="true"></span>
+      <p class="foot__name">Dr Fahrid Honorat ADETONAH</p>
+      <p class="foot__role">Docteur en pharmacie &mdash; Cotonou, Bénin</p>
     </div>
 
-    <nav class="footer__nav" aria-label="Liens rapides">
-      <h2 class="footer__heading">Liens rapides</h2>
+    <nav class="foot__nav" aria-label="Liens rapides">
+      <h2>Aller à</h2>
       <ul>
         <li><a href="#accueil">Accueil</a></li>
         <li><a href="#services">Services</a></li>
@@ -503,20 +548,20 @@
       </ul>
     </nav>
 
-    <div class="footer__social">
-      <h2 class="footer__heading">Me suivre</h2>
+    <nav class="foot__nav" aria-label="Réseaux sociaux">
+      <h2>Me suivre</h2>
       <ul>
         <li><a href="https://www.tiktok.com/@dr_adetonah" target="_blank" rel="noopener noreferrer">TikTok</a></li>
         <li><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
         <li><a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
       </ul>
-    </div>
+    </nav>
 
   </div>
 
-  <div class="container footer__bottom">
-    <p>&copy; <span id="year">2026</span> Dr Fahrid Honorat ADETONAH. Tous droits réservés.</p>
-    <p class="footer__note">Les contenus de ce site sont informatifs et ne remplacent pas une consultation.</p>
+  <div class="shell foot__base">
+    <p>&copy; <span id="year">2026</span> Dr Fahrid Honorat ADETONAH</p>
+    <p class="foot__legal">Contenus informatifs. Ils ne remplacent pas une consultation.</p>
   </div>
 </footer>
 

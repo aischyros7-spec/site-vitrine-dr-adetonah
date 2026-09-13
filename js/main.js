@@ -1,346 +1,504 @@
 /* =================================================================
-   Dr Fahrid Honorat ADETONAH — Script principal
+   Dr Fahrid Honorat ADETONAH — « L'officine de nuit »
    -----------------------------------------------------------------
-   Aucune dépendance externe. Tout est en API navigateur native.
-   Modules :
-     1. Header sticky (ombre au défilement)
-     2. Menu mobile (burger)
-     3. Navigation active (scrollspy)
-     4. Animations d'apparition au scroll
-     5. Formulaire de contact (validation + Formspree ou mailto)
-     6. Année courante dans le pied de page
+   Aucune dépendance. Modules :
+     1. Barre de navigation collante
+     2. Menu mobile
+     3. Lien actif au défilement
+     4. Horloge de Cotonou (l'officine est-elle ouverte ? toujours)
+     5. Enseigne à matrice de LED (canvas)
+     6. Bandeau défilant
+     7. Meuble d'officine (tiroirs)
+     8. Formulaire de contact
+     9. Année courante
    ================================================================= */
 
 (function () {
   'use strict';
 
-  /* Raccourcis de sélection */
-  var $  = function (sel, ctx) { return (ctx || document).querySelector(sel); };
-  var $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
+  var $  = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
-  /* L'utilisateur a-t-il demandé à réduire les animations ? */
-  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var calme = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 
   /* ===============================================================
-     1. HEADER STICKY
-     Ajoute la classe .is-scrolled dès que la page défile un peu.
-     Le calcul est délégué à requestAnimationFrame pour rester fluide.
+     1. BARRE DE NAVIGATION COLLANTE
      =============================================================== */
-  (function initStickyHeader() {
-    var header = $('#header');
-    if (!header) return;
+  (function () {
+    var bar = $('#topbar');
+    if (!bar) return;
+    var attente = false;
 
-    var ticking = false;
-
-    function update() {
-      header.classList.toggle('is-scrolled', window.scrollY > 8);
-      ticking = false;
+    function maj() {
+      bar.classList.toggle('is-stuck', window.scrollY > 10);
+      attente = false;
     }
-
     window.addEventListener('scroll', function () {
-      if (!ticking) {
-        ticking = true;
-        window.requestAnimationFrame(update);
-      }
+      if (!attente) { attente = true; requestAnimationFrame(maj); }
     }, { passive: true });
-
-    update();
+    maj();
   })();
 
 
   /* ===============================================================
      2. MENU MOBILE
-     Le bouton burger ouvre/ferme le panneau de navigation.
-     aria-expanded pilote à la fois le style (CSS) et l'accessibilité.
      =============================================================== */
-  (function initMobileNav() {
-    var toggle = $('#navToggle');
-    var menu   = $('#navMenu');
-    if (!toggle || !menu) return;
+  (function () {
+    var btn  = $('#menuBtn');
+    var menu = $('#menu');
+    if (!btn || !menu) return;
 
-    function setOpen(open) {
-      toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
-      menu.classList.toggle('is-open', open);
-      document.body.classList.toggle('is-locked', open);
+    function ouvrir(etat) {
+      btn.setAttribute('aria-expanded', String(etat));
+      menu.classList.toggle('is-open', etat);
+      document.body.classList.toggle('is-locked', etat);
     }
+    function estOuvert() { return btn.getAttribute('aria-expanded') === 'true'; }
 
-    function isOpen() {
-      return toggle.getAttribute('aria-expanded') === 'true';
-    }
+    btn.addEventListener('click', function () { ouvrir(!estOuvert()); });
 
-    toggle.addEventListener('click', function () {
-      setOpen(!isOpen());
+    $$('a', menu).forEach(function (a) {
+      a.addEventListener('click', function () { ouvrir(false); });
     });
 
-    /* Fermeture après un clic sur un lien du menu */
-    $$('a', menu).forEach(function (link) {
-      link.addEventListener('click', function () { setOpen(false); });
-    });
-
-    /* Fermeture à la touche Échap, avec retour du focus sur le bouton */
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && isOpen()) {
-        setOpen(false);
-        toggle.focus();
-      }
+      if (e.key === 'Escape' && estOuvert()) { ouvrir(false); btn.focus(); }
     });
 
-    /* Fermeture si l'on clique en dehors du menu */
     document.addEventListener('click', function (e) {
-      if (isOpen() && !menu.contains(e.target) && !toggle.contains(e.target)) {
-        setOpen(false);
-      }
+      if (estOuvert() && !menu.contains(e.target) && !btn.contains(e.target)) ouvrir(false);
     });
 
-    /* Le menu redevient une barre horizontale au-delà de 900px :
-       on nettoie l'état mobile pour éviter un scroll bloqué. */
+    /* Au-delà de 900px le menu redevient une barre : on lève le verrou */
     window.matchMedia('(min-width: 900px)').addEventListener('change', function (e) {
-      if (e.matches) setOpen(false);
+      if (e.matches) ouvrir(false);
     });
   })();
 
 
   /* ===============================================================
-     3. NAVIGATION ACTIVE (scrollspy)
-     Surligne le lien correspondant à la section affichée à l'écran.
+     3. LIEN ACTIF AU DÉFILEMENT
      =============================================================== */
-  (function initScrollSpy() {
-    var links = $$('.nav__link');
-    if (!links.length || !('IntersectionObserver' in window)) return;
+  (function () {
+    var liens = $$('.menu__link');
+    if (!liens.length || !('IntersectionObserver' in window)) return;
 
-    /* Associe chaque section à son lien de navigation */
-    var map = {};
-    var sections = [];
-
-    links.forEach(function (link) {
-      var id = link.getAttribute('href');
-      if (!id || id.charAt(0) !== '#') return;
-      var section = document.querySelector(id);
-      if (!section) return;
-      map[section.id] = link;
-      sections.push(section);
+    var table = {}, sections = [];
+    liens.forEach(function (l) {
+      var href = l.getAttribute('href');
+      if (!href || href.charAt(0) !== '#') return;
+      var s = document.querySelector(href);
+      if (!s) return;
+      table[s.id] = l;
+      sections.push(s);
     });
 
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        links.forEach(function (l) { l.classList.remove('is-active'); });
-        var active = map[entry.target.id];
-        if (active) active.classList.add('is-active');
+    var obs = new IntersectionObserver(function (entrees) {
+      entrees.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        liens.forEach(function (l) { l.classList.remove('is-here'); });
+        if (table[e.target.id]) table[e.target.id].classList.add('is-here');
       });
-    }, {
-      /* La section est considérée active quand elle occupe la bande
-         centrale de l'écran (sous le header, au-dessus du bas de page). */
-      rootMargin: '-45% 0px -50% 0px',
-      threshold: 0
-    });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
 
-    sections.forEach(function (s) { observer.observe(s); });
+    sections.forEach(function (s) { obs.observe(s); });
   })();
 
 
   /* ===============================================================
-     4. ANIMATIONS D'APPARITION AU SCROLL
-     Chaque élément .reveal reçoit .is-visible lorsqu'il entre dans
-     le champ de vision. On cesse ensuite de l'observer (animation
-     jouée une seule fois, meilleure performance).
+     4. HORLOGE DE COTONOU
+     Le Bénin est à UTC+1 toute l'année, sans changement d'heure.
+     On lit le fuseau réel plutôt que de décaler l'heure du visiteur :
+     l'information doit être juste depuis Paris comme depuis Montréal.
      =============================================================== */
-  (function initReveal() {
-    var items = $$('.reveal');
-    if (!items.length) return;
+  (function () {
+    var cibles = $$('#clockNav, #clockHero, #clockContact');
+    if (!cibles.length) return;
 
-    /* Repli : sans IntersectionObserver ou en mode animations réduites,
-       tout est affiché immédiatement. */
-    if (reducedMotion || !('IntersectionObserver' in window)) {
-      items.forEach(function (el) { el.classList.add('is-visible'); });
-      return;
+    var format;
+    try {
+      format = new Intl.DateTimeFormat('fr-FR', {
+        timeZone: 'Africa/Porto-Novo',
+        hour: '2-digit', minute: '2-digit'
+      });
+    } catch (err) {
+      /* Repli si le fuseau n'est pas connu du navigateur : UTC+1 à la main */
+      format = null;
     }
 
-    var observer = new IntersectionObserver(function (entries, obs) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        obs.unobserve(entry.target);
-      });
-    }, {
-      rootMargin: '0px 0px -8% 0px',
-      threshold: 0.08
-    });
+    function heure() {
+      if (format) return format.format(new Date()).replace(':', 'h');
+      var d = new Date(Date.now() + 3600000);
+      return ('0' + d.getUTCHours()).slice(-2) + 'h' + ('0' + d.getUTCMinutes()).slice(-2);
+    }
 
-    items.forEach(function (el) { observer.observe(el); });
+    function maj() {
+      var h = heure();
+      cibles.forEach(function (t) {
+        t.textContent = h;
+        t.setAttribute('datetime', h.replace('h', ':'));
+      });
+    }
+
+    maj();
+    setInterval(maj, 20000);
   })();
 
 
   /* ===============================================================
-     5. FORMULAIRE DE CONTACT
+     5. L'ENSEIGNE
      -----------------------------------------------------------------
-     CONFIGURATION (dans index.html, sur la balise <form>) :
-       data-endpoint="https://formspree.io/f/VOTRE_ID"  → envoi AJAX
-       data-endpoint=""                                 → repli mailto:
-       data-mailto="adresse@domaine.com"                → adresse du repli
-     Aucun backend n'est nécessaire dans les deux cas.
+     Une croix de pharmacie en matrice de LED, dessinée sur canvas.
+     Trois états, comme les enseignes réelles :
+       « allumage »  les diodes s'allument une à une au chargement
+       « veille »    la croix respire doucement
+       « message »   un texte traverse la barre horizontale
+     Le texte est transformé en points par échantillonnage d'un canvas
+     hors écran : pas de fonte matricielle à embarquer, et les accents
+     fonctionnent.
      =============================================================== */
-  (function initContactForm() {
+  (function () {
+    var cv = $('#signCanvas');
+    if (!cv || !cv.getContext) return;
+
+    var ctx = cv.getContext('2d');
+
+    var N       = 29;   /* côté de la matrice, en diodes */
+    var BRAS    = 11;   /* largeur des branches de la croix */
+    var HAUT_TXT = 9;   /* hauteur du texte, en diodes */
+
+    var deb = Math.floor((N - BRAS) / 2);        /* 9  */
+    var fin = deb + BRAS - 1;                    /* 19 */
+    var txtHaut = deb + Math.floor((BRAS - HAUT_TXT) / 2); /* 10 */
+
+    var MESSAGES = [
+      'OUVERT 24H/24',
+      'NPSV FIDJROSSÈ',
+      '100 000+ ABONNÉS',
+      'DR ADETONAH'
+    ];
+
+    /* --- Texte → colonnes de diodes --- */
+    function colonnes(texte) {
+      var c = document.createElement('canvas');
+      var g = c.getContext('2d');
+      var police = 'bold ' + HAUT_TXT + 'px sans-serif';
+
+      g.font = police;
+      var largeur = Math.ceil(g.measureText(texte).width) + 2;
+
+      c.width = largeur;
+      c.height = HAUT_TXT + 2;
+      g.font = police;              /* le redimensionnement remet le contexte à zéro */
+      g.textBaseline = 'top';
+      g.fillStyle = '#fff';
+      g.fillText(texte, 1, 0);
+
+      var px = g.getImageData(0, 0, c.width, c.height).data;
+      var cols = [];
+      for (var x = 0; x < c.width; x++) {
+        var col = [];
+        for (var y = 0; y < HAUT_TXT; y++) {
+          col.push(px[(y * c.width + x) * 4 + 3] > 90);
+        }
+        cols.push(col);
+      }
+      return cols;
+    }
+
+    var rendus = MESSAGES.map(colonnes);
+
+    /* --- Seuils d'allumage, pour que la croix s'allume en désordre --- */
+    var seuils = [];
+    for (var r = 0; r < N; r++) {
+      seuils[r] = [];
+      for (var c2 = 0; c2 < N; c2++) seuils[r][c2] = Math.random();
+    }
+
+    function dansLaCroix(r, c) {
+      return (c >= deb && c <= fin) || (r >= deb && r <= fin);
+    }
+
+    /* --- Dimensionnement, densité d'écran comprise --- */
+    var taille = 0, pas = 0;
+    function dimensionner() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var boite = cv.getBoundingClientRect();
+      if (!boite.width) return;
+      taille = boite.width;
+      cv.width  = Math.round(taille * dpr);
+      cv.height = Math.round(taille * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      pas = taille / N;
+    }
+    dimensionner();
+    window.addEventListener('resize', dimensionner);
+
+    /* --- Machine à états --- */
+    var ALLUMAGE = 1000;   /* ms */
+    var VEILLE   = 2400;
+    var VITESSE  = 24;     /* colonnes par seconde */
+
+    var etat = calme ? 'veille' : 'allumage';
+    var t0 = performance.now();
+    var iMsg = 0;
+
+    function eclat(r, c, ms) {
+      /* Respiration : une onde très lente partant du centre */
+      var dx = c - (N - 1) / 2, dy = r - (N - 1) / 2;
+      var d = Math.sqrt(dx * dx + dy * dy);
+      return 0.78 + 0.22 * Math.sin(ms / 900 - d / 3.4);
+    }
+
+    function dessiner(ms) {
+      if (!pas) { dimensionner(); if (!pas) return; }
+
+      var ecoule = ms - t0;
+      ctx.clearRect(0, 0, taille, taille);
+
+      /* Progression du message en cours */
+      var cols = rendus[iMsg];
+      var decalage = 0;
+      if (etat === 'message') {
+        decalage = N - (ecoule / 1000) * VITESSE;
+        if (decalage < -cols.length) { etat = 'veille'; t0 = ms; }
+      } else if (etat === 'allumage' && ecoule > ALLUMAGE) {
+        etat = 'veille'; t0 = ms;
+      } else if (etat === 'veille' && ecoule > VEILLE && !calme) {
+        etat = 'message'; t0 = ms;
+        iMsg = (iMsg + 1) % rendus.length;
+      }
+
+      var avance = Math.min(ecoule / ALLUMAGE, 1);
+      var rayon = pas * 0.33;
+
+      for (var r = 0; r < N; r++) {
+        for (var c = 0; c < N; c++) {
+          if (!dansLaCroix(r, c)) continue;
+
+          var v;
+          if (etat === 'allumage') {
+            v = seuils[r][c] < avance ? eclat(r, c, ms) : 0;
+          } else if (etat === 'message' && r >= txtHaut && r < txtHaut + HAUT_TXT) {
+            /* Bande de texte : la diode suit le pixel correspondant */
+            var idx = Math.floor(c - decalage);
+            var colonne = cols[idx];
+            v = (colonne && colonne[r - txtHaut]) ? 1 : 0;
+          } else {
+            v = etat === 'message' ? 0.34 : eclat(r, c, ms);
+          }
+
+          ctx.fillStyle = 'rgba(59, 224, 125, ' + (0.055 + 0.945 * Math.max(v, 0)) + ')';
+          ctx.beginPath();
+          ctx.arc((c + 0.5) * pas, (r + 0.5) * pas, rayon, 0, 6.2832);
+          ctx.fill();
+        }
+      }
+    }
+
+    /* Boucle bridée à 30 images/s : l'effet est identique, la batterie tient */
+    var visible = true;
+    var dernier = 0;
+
+    function boucle(ms) {
+      if (visible && ms - dernier > 33) { dessiner(ms); dernier = ms; }
+      requestAnimationFrame(boucle);
+    }
+    requestAnimationFrame(boucle);
+
+    /* Hors de l'écran, on arrête de dessiner */
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (e) { visible = e[0].isIntersecting; })
+        .observe(cv);
+    }
+  })();
+
+
+  /* ===============================================================
+     6. BANDEAU DÉFILANT
+     La piste est dupliquée pour que la boucle soit sans couture.
+     =============================================================== */
+  (function () {
+    var piste = $('#tickerTrack');
+    if (!piste) return;
+    piste.appendChild(piste.firstElementChild.cloneNode(true));
+  })();
+
+
+  /* ===============================================================
+     7. LE MEUBLE D'OFFICINE
+     Les tiroirs sont indépendants : on peut en ouvrir plusieurs.
+     Le premier est ouvert au chargement, pour que la section montre
+     son contenu sans qu'il faille cliquer.
+     =============================================================== */
+  (function () {
+    var boutons = $$('.drawer__btn');
+    if (!boutons.length) return;
+
+    boutons.forEach(function (b, i) {
+      var panneau = document.getElementById(b.getAttribute('aria-controls'));
+      if (!panneau) return;
+
+      function basculer(ouvert) {
+        b.setAttribute('aria-expanded', String(ouvert));
+        panneau.classList.toggle('is-open', ouvert);
+      }
+
+      b.addEventListener('click', function () {
+        basculer(b.getAttribute('aria-expanded') !== 'true');
+      });
+
+      if (i === 0) basculer(true);
+    });
+  })();
+
+
+  /* ===============================================================
+     8. FORMULAIRE DE CONTACT
+     -----------------------------------------------------------------
+     Réglage dans index.html, sur la balise <form> :
+       data-endpoint="https://formspree.io/f/VOTRE_ID"  → envoi direct
+       data-endpoint=""                                 → repli mailto:
+       data-mailto="adresse@domaine.com"                → adresse de repli
+     =============================================================== */
+  (function () {
     var form = $('#contactForm');
     if (!form) return;
 
-    var status   = $('#formStatus');
-    var submit   = $('#submitBtn');
-    var endpoint = (form.dataset.endpoint || '').trim();
-    var mailto   = (form.dataset.mailto || '').trim();
+    var etat   = $('#formStatus');
+    var envoi  = $('#submitBtn');
+    var url    = (form.dataset.endpoint || '').trim();
+    var mail   = (form.dataset.mailto || '').trim();
 
-    /* --- Règles de validation, champ par champ --- */
-    var rules = {
+    var regles = {
       name: function (v) {
         if (!v) return 'Merci d’indiquer votre nom.';
-        if (v.length < 2) return 'Le nom semble trop court.';
+        if (v.length < 2) return 'Ce nom semble trop court.';
         return '';
       },
       email: function (v) {
         if (!v) return 'Merci d’indiquer votre email.';
-        /* Contrôle volontairement simple : le serveur mail reste juge */
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Cette adresse email semble invalide.';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Cette adresse semble invalide.';
         return '';
       },
       phone: function (v) {
-        if (!v) return ''; /* champ facultatif */
+        if (!v) return '';
         if (!/^[+0-9\s().-]{6,20}$/.test(v)) return 'Ce numéro semble invalide.';
         return '';
       },
       message: function (v) {
-        if (!v) return 'Merci d’écrire votre message.';
-        if (v.length < 10) return 'Votre message est un peu court (10 caractères minimum).';
+        if (!v) return 'Merci d’écrire votre demande.';
+        if (v.length < 10) return 'Quelques mots de plus m’aideraient à vous répondre.';
         return '';
       }
     };
 
-    /* Affiche ou efface le message d'erreur d'un champ */
-    function setFieldError(field, message) {
-      var holder = form.querySelector('[data-error-for="' + field.name + '"]');
-      field.classList.toggle('has-error', Boolean(message));
-      field.setAttribute('aria-invalid', message ? 'true' : 'false');
-      if (holder) holder.textContent = message;
+    var champs = $$('input, textarea', form).filter(function (c) { return regles[c.name]; });
+
+    function signaler(champ, message) {
+      var zone = form.querySelector('[data-error-for="' + champ.name + '"]');
+      champ.classList.toggle('is-bad', Boolean(message));
+      champ.setAttribute('aria-invalid', message ? 'true' : 'false');
+      if (zone) zone.textContent = message;
     }
 
-    function validateField(field) {
-      var rule = rules[field.name];
-      if (!rule) return true;
-      var error = rule(field.value.trim());
-      setFieldError(field, error);
-      return !error;
+    function verifier(champ) {
+      var erreur = regles[champ.name](champ.value.trim());
+      signaler(champ, erreur);
+      return !erreur;
     }
 
-    /* Validation en direct, mais seulement après une première erreur :
-       on n'agresse pas l'utilisateur pendant qu'il tape. */
-    $$('.field__input', form).forEach(function (field) {
-      field.addEventListener('blur', function () { validateField(field); });
-      field.addEventListener('input', function () {
-        if (field.classList.contains('has-error')) validateField(field);
+    /* Contrôle à la sortie du champ, puis en direct une fois signalé */
+    champs.forEach(function (c) {
+      c.addEventListener('blur', function () { verifier(c); });
+      c.addEventListener('input', function () {
+        if (c.classList.contains('is-bad')) verifier(c);
       });
     });
 
-    function setStatus(message, type) {
-      if (!status) return;
-      status.textContent = message;
-      status.className = 'form__status' + (type ? ' is-' + type : '');
+    function dire(texte, type) {
+      if (!etat) return;
+      etat.textContent = texte;
+      etat.className = 'rx__status' + (type ? ' is-' + type : '');
     }
 
-    /* --- Repli sans service externe : ouverture du client mail --- */
-    function sendByMailto(data) {
-      var subject = 'Demande de contact — ' + data.name;
-      var body = [
-        'Nom : ' + data.name,
-        'Email : ' + data.email,
-        'Téléphone : ' + (data.phone || 'non renseigné'),
-        '',
-        'Message :',
-        data.message
+    function parMail(d) {
+      var corps = [
+        'Nom : ' + d.name,
+        'Email : ' + d.email,
+        'Téléphone : ' + (d.phone || 'non renseigné'),
+        '', 'Demande :', d.message
       ].join('\n');
 
-      window.location.href = 'mailto:' + mailto +
-        '?subject=' + encodeURIComponent(subject) +
-        '&body=' + encodeURIComponent(body);
+      window.location.href = 'mailto:' + mail +
+        '?subject=' + encodeURIComponent('Demande de contact — ' + d.name) +
+        '&body=' + encodeURIComponent(corps);
 
-      setStatus('Votre logiciel de messagerie va s’ouvrir avec le message pré-rempli. Il ne reste qu’à l’envoyer.', 'success');
+      dire('Votre messagerie s’ouvre avec le message prêt. Il ne reste qu’à l’envoyer.', 'ok');
     }
 
-    /* --- Envoi via Formspree (ou tout service acceptant du JSON) --- */
-    function sendByFetch(data) {
-      submit.disabled = true;
-      setStatus('Envoi en cours…', '');
+    function parReseau(d) {
+      envoi.disabled = true;
+      dire('Envoi en cours…', '');
 
-      fetch(endpoint, {
+      fetch(url, {
         method: 'POST',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(d)
       })
-        .then(function (res) {
-          if (!res.ok) throw new Error('HTTP ' + res.status);
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
           form.reset();
-          setStatus('Message envoyé, merci ! Je vous réponds sous 48 heures.', 'success');
+          champs.forEach(function (c) { signaler(c, ''); });
+          dire('Message reçu. Je vous réponds sous 48 heures.', 'ok');
         })
         .catch(function () {
-          setStatus('L’envoi a échoué. Réessayez ou écrivez directement à ' + (mailto || 'notre adresse email') + '.', 'error');
+          dire('L’envoi a échoué. Réessayez, ou écrivez à ' + (mail || 'l’adresse ci-contre') + '.', 'ko');
         })
-        .then(function () {
-          submit.disabled = false;
-        });
+        .then(function () { envoi.disabled = false; });
     }
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
-      /* Piège anti-spam : si le champ caché est rempli, c'est un robot.
-         On simule un succès sans rien envoyer. */
-      var honeypot = form.querySelector('[name="_gotcha"]');
-      if (honeypot && honeypot.value) {
-        setStatus('Message envoyé, merci !', 'success');
-        return;
-      }
+      /* Piège à robots : rempli, donc automatisé. On n'envoie rien. */
+      var piege = form.querySelector('[name="_gotcha"]');
+      if (piege && piege.value) { dire('Message reçu.', 'ok'); return; }
 
-      /* Validation de tous les champs avant envoi */
-      var fields = $$('.field__input', form);
-      var firstInvalid = null;
-
-      fields.forEach(function (field) {
-        if (!validateField(field) && !firstInvalid) firstInvalid = field;
+      var premier = null;
+      champs.forEach(function (c) {
+        if (!verifier(c) && !premier) premier = c;
       });
-
-      if (firstInvalid) {
-        setStatus('Merci de corriger les champs signalés.', 'error');
-        firstInvalid.focus();
+      if (premier) {
+        dire('Merci de corriger les champs signalés.', 'ko');
+        premier.focus();
         return;
       }
 
-      /* form.elements[...] plutôt que form[...] : évite toute collision avec
-         les propriétés natives du formulaire (form.name, form.method...). */
+      /* form.elements[...] : évite toute collision avec les propriétés
+         natives du formulaire (form.name, form.method…). */
       var el = form.elements;
-      var data = {
+      var donnees = {
         name:    el['name'].value.trim(),
         email:   el['email'].value.trim(),
         phone:   el['phone'].value.trim(),
         message: el['message'].value.trim()
       };
 
-      if (endpoint) {
-        sendByFetch(data);
-      } else if (mailto) {
-        sendByMailto(data);
-      } else {
-        setStatus('Le formulaire n’est pas encore configuré. Merci d’utiliser les coordonnées ci-contre.', 'error');
-      }
+      if (url) parReseau(donnees);
+      else if (mail) parMail(donnees);
+      else dire('Le formulaire n’est pas encore configuré. Utilisez les coordonnées ci-contre.', 'ko');
     });
   })();
 
 
   /* ===============================================================
-     6. ANNÉE COURANTE DANS LE PIED DE PAGE
+     9. ANNÉE COURANTE
      =============================================================== */
-  (function initYear() {
-    var el = $('#year');
-    if (el) el.textContent = String(new Date().getFullYear());
+  (function () {
+    var an = $('#year');
+    if (an) an.textContent = String(new Date().getFullYear());
   })();
 
 })();

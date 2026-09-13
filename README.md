@@ -6,6 +6,25 @@ fondateur de StockAid Pro et créateur de contenu santé.
 
 ---
 
+## Parti pris
+
+**« L'officine de nuit ».** Le fait le plus singulier du métier de Dr ADETONAH est que
+sa pharmacie ne ferme jamais, et l'objet le plus reconnaissable de son monde est la croix
+verte à LED restée allumée sur Fidjrossè. Le site est donc éclairé comme une enseigne :
+fond de nuit vert-noir, vert LED réservé aux signaux, ambre des lampadaires pour la chaleur.
+
+L'élément central est une **vraie croix de pharmacie à matrice de diodes**, dessinée sur
+canvas : elle s'allume au chargement, respire, puis fait défiler ses messages comme les
+enseignes réelles. À côté, l'heure de Cotonou en direct. Ce n'est pas un ornement, c'est
+la démonstration du 24h/24.
+
+Les services ne sont pas quatre cartes en grille mais un **meuble d'officine** : quatre
+tiroirs que le visiteur ouvre. Le formulaire est réglé comme une ordonnance, en lignes
+plutôt qu'en boîtes.
+
+Le site assume une **identité sombre unique**, sans variante claire. Pour l'inverser, voir
+« Changer la palette » plus bas.
+
 ## Stack
 
 HTML5 + CSS3 + JavaScript natif. **Aucun framework, aucune étape de build,
@@ -39,7 +58,7 @@ Tous les emplacements concernés sont marqués `TODO` dans `index.html`.
 
 | # | Quoi | Où |
 |---|------|-----|
-| 1 | **Photo du portrait** | Remplacer `assets/img/portrait.svg` par une photo (ratio 4:5, ~800×1000 px, JPG ou WebP) et ajuster le `src` dans la section Hero |
+| 1 | **Photo du portrait** | Remplacer `assets/img/portrait.svg` par une photo (ratio 4:5, ~900×1125 px, JPG ou WebP). Le traitement duotone vert est appliqué en CSS et se lève au survol : une photo couleur ordinaire s'intègre directement |
 | 2 | **Email** | `contact@exemple.com` — présent dans le bloc coordonnées et dans l'attribut `data-mailto` du formulaire |
 | 3 | **Téléphone** | `+229 00 00 00 00` — dans le bloc coordonnées (texte **et** attribut `href="tel:"`) |
 | 4 | **Instagram / LinkedIn** | URL génériques dans la section Réseaux sociaux et dans le pied de page |
@@ -47,6 +66,8 @@ Tous les emplacements concernés sont marqués `TODO` dans `index.html`.
 | 6 | **Image de partage** | Exporter `assets/img/og-image.svg` en JPG 1200×630 et mettre à jour `og:image` |
 
 Le compte TikTok `@dr_adetonah` est déjà renseigné.
+
+Le fuseau de l'horloge (`Africa/Porto-Novo`, UTC+1) est dans `js/main.js`, module 4.
 
 ---
 
@@ -77,30 +98,28 @@ Un champ piège invisible (`_gotcha`) filtre les robots spammeurs.
 
 ---
 
-## Changer la palette de couleurs
+## Changer la palette
 
 Toutes les couleurs sont des variables CSS regroupées en haut de `css/style.css`
-(section 01). Pour basculer sur le thème bleu médical, deux lignes suffisent :
+(section 01, « Jetons »). Rien n'est codé en dur ailleurs.
 
-```css
---c-primary:       #0E3A5C;  /* au lieu de #0F4C43 */
---c-primary-light: #3E8EA8;  /* au lieu de #2A7F6F */
---c-primary-dark:  #08263D;  /* au lieu de #0A332D */
-```
+| Rôle | Variable | Hex |
+|------|----------|-----|
+| Fond de nuit | `--ink` | `#03120F` |
+| Surface posée | `--ink-2` | `#07201B` |
+| Vert enseigne (signaux) | `--led` | `#3BE07D` |
+| Ambre lampadaire (chaleur) | `--sodium` | `#E9A13B` |
+| Texte | `--bone` | `#EFEAE0` |
+| Texte secondaire | `--sage` | `#A3B8AF` |
 
-### Palette actuelle — « Vert Officine »
+**Typographie** : Bodoni Moda pour les titres — le Didone des étiquettes d'apothicaire —,
+Archivo pour le texte courant, et la mono du système pour la voix « données » (aucune
+requête réseau supplémentaire). Servies par Google Fonts avec `preconnect` et `display=swap`.
 
-| Rôle | Hex |
-|------|-----|
-| Vert sapin (primaire) | `#0F4C43` |
-| Vert eucalyptus | `#2A7F6F` |
-| Or cuivré (accent) | `#C89B5A` |
-| Blanc cassé (fond) | `#FDFCFA` |
-| Sable (fond alterné) | `#F4EFE8` |
-| Encre (texte) | `#1C1F1E` |
-
-**Typographie** : Fraunces (titres) + Inter (texte), servies par Google Fonts
-avec `preconnect` et `display=swap`.
+Pour passer le site en clair, il faut inverser les jetons de façon cohérente : `--ink`
+devient un blanc cassé, `--bone` une encre sombre, et `--led` doit être assombri pour
+rester lisible sur fond clair (`#0F8F49` environ). Le grain et la lueur de `body::before`
+et `body::after` sont à retirer.
 
 ---
 
@@ -131,9 +150,12 @@ classique. Aucune configuration serveur requise.
   qui est optimisé en priorité.
 - **Tailles fluides** — `clamp()` sur les titres et les espacements : la mise en
   page respire à toutes les tailles d'écran sans multiplier les breakpoints.
-- **Animations** — `IntersectionObserver` natif pour les apparitions au scroll,
-  chaque élément n'étant observé qu'une fois. `prefers-reduced-motion` est
-  respecté : tout s'affiche instantanément si l'utilisateur le demande.
+- **L'enseigne** — canvas, matrice de 29×29 diodes, boucle bridée à 30 images/s et
+  suspendue dès que la croix quitte l'écran. Le texte défilant n'embarque aucune fonte
+  matricielle : il est échantillonné depuis un canvas hors écran, ce qui fait fonctionner
+  les accents. `prefers-reduced-motion` laisse la croix allumée mais arrête le défilement.
+- **Tiroirs** — ouverture par `grid-template-rows: 0fr → 1fr`, sans hauteur calculée en
+  JavaScript. Le premier est ouvert au chargement pour que la section montre son contenu.
 - **Icônes SVG inline** — aucune bibliothèque d'icônes, donc aucune requête
   réseau supplémentaire.
 - **Accessibilité** — HTML sémantique, lien d'évitement, `aria-expanded` sur le
