@@ -71,6 +71,10 @@
   --ease: cubic-bezier(.22, .61, .36, 1);
   --t-fast: .18s var(--ease);
   --t:      .32s var(--ease);
+
+  /* Le site assume une identité claire : on l'indique au navigateur pour que
+     les champs de formulaire ne soient pas repeints en sombre par le système. */
+  color-scheme: light;
 }
 
 
