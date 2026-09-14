@@ -1,0 +1,17 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 794, "h": 1123, "title": "Affiche A4 — impression", "print": "fixed" },
+    { "file": "Carre.dc.html", "x": 914, "y": 0, "w": 1080, "h": 1080, "title": "Carré 1080 — réseaux sociaux", "print": "fixed" },
+    { "file": "DirectionB.dc.html", "x": 2114, "y": 0, "w": 794, "h": 1123, "title": "Variante « Bloc vert » — A4", "print": "fixed" }
+  ],
+  "annotations": [
+    {
+      "id": "note-coordonnees",
+      "x": 4,
+      "y": -186,
+      "w": 460,
+      "text": "À compléter : les mentions entre crochets — [ADRESSE], [TÉLÉPHONE], [HORAIRES] — attendent vos coordonnées.\n\nLe logo est redessiné en vectoriel d'après l'image transmise. Envoyez le fichier d'origine si vous voulez la version exacte."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}
